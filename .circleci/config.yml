@@ -1,0 +1,40 @@
+version: 2.1
+jobs:
+  tests_and_linters:
+    docker:
+      - image: cimg/node:16.18.0-browsers
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/repo/bin
+
+      - restore_cache:
+          keys:
+            - dependencies-cache-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-cache
+
+      - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
+            yarn
+
+      - run:
+          name: Run linter to check code style
+          command: yarn lint:check
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-cache-{{ checksum "yarn.lock" }}
+
+
+workflows:
+  exchange_rates:
+    jobs:
+      - tests_and_linters
