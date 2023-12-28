@@ -115,8 +115,8 @@ provider:
             - "*"
 
 functions:
-  getConversationData:
-    handler: src/handler/conversation-handler.fetchConversationData
+  fetchUesrData:
+    handler: src/handler/user-handler.fetchUesrData
  
 resources:
   Resources:

@@ -1,13 +1,11 @@
 export const ConversationQueries = {
     GetConversation: `
-    SELECT conversation_id, login_id, conversation_name, conversation_time, conversation_text
-FROM awai.ConversationDetails;
-
-    `,
+    SELECT Id, conversation_id, login_id, conversation_name, conversation_type_id, conversation_time, createdTimeStamp, updatedTimestamp
+FROM awai.Conversation `,
   
     GetConversationById: `
-    SELECT conversation_id, login_id, conversation_name, conversation_time, conversation_text
-FROM awai.ConversationDetails as t
+    SELECT Id, conversation_id, login_id, conversation_name, conversation_type_id, conversation_time, createdTimeStamp, updatedTimestamp
+FROM awai.Conversation as t
     WHERE
     conversation_id = ?
     `,

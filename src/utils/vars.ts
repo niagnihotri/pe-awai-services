@@ -1,5 +1,6 @@
 export const DATA_SOURCES = {
   mySqlDataSource: {
+   // DB_HOST: 'pe-awai.cluster-ro-cng8u5rib7j2.us-east-1.rds.amazonaws.com'
     DB_HOST: 'pe-awai.cluster-cng8u5rib7j2.us-east-1.rds.amazonaws.com',//process.env.MY_SQL_DB_HOST,
     DB_USER: 'admin',//process.env.MY_SQL_DB_USER,
     DB_PASSWORD: 'Admin123',//process.env.MY_SQL_DB_PASSWORD,
