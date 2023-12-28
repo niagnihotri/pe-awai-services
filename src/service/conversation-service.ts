@@ -7,8 +7,7 @@ const mysql = require('mysql');
 
 
 export async function fetchConversationDataCall(): Promise<any> {
-    // initialize
-   // await connectionFactory.initialize();
+    console.log("inside function fetchConversationDataCall")
     var connection = mysql.createConnection({
         host: 'pe-awai.cluster-cng8u5rib7j2.us-east-1.rds.amazonaws.com',
         port: 3306,
@@ -21,14 +20,17 @@ export async function fetchConversationDataCall(): Promise<any> {
       connection.connect();
 
     
-
-    connection.query('show tables', function (error, results, fields) {
+    let query="SELECT Id, conversation_id, login_id, conversation_name, conversation_type_id, conversation_time, createdTimeStamp, updatedTimestamp FROM awai.Conversation;"
+    console.log("before query==="+query);
+    connection.query(query, function (error, results, fields) {
         if (error) {
+            console.log("error Message==="+error);
             connection.destroy();
             throw error;
         } else {
             // connected!
-            console.log(results);
+            console.log("Connected==="+results);
+            return results;
            // callback(error, results);
             connection.end(function (err) { //callback(err, results); 
             });
@@ -36,7 +38,10 @@ export async function fetchConversationDataCall(): Promise<any> {
     });
 
 
-   /* console.log("conn estbl");
+    
+    // initialize
+  /*  await connectionFactory.initialize();
+    console.log("conn estbl");
     try{
     let allConversations = await connectionFactory.getRepository(Conversation).find();
     console.log("allConversations==" + JSON.stringify(allConversations));
@@ -49,16 +54,16 @@ export async function fetchConversationDataCall(): Promise<any> {
     finally{
          // destroy the connection
     await connectionFactory.destroy()
-    }*/
+    } */
 }
 
-export async function insertConversationDataCall(login_id:number,conversation_name:string,conversation_type_id:number): Promise<any> {
+export async function insertConversationDataCall(login_id:string,conversation_name:string,conversation_type_id:string): Promise<any> {
     // initialize
     await connectionFactory.initialize();
     console.log("conn estbl");
     const convObj = new Conversation();
     convObj.conversation_id= getRandomUUID();
-    convObj.login_id = login_id;
+    convObj.login_id = Number(login_id);
     convObj.conversation_name = conversation_name!=null ? conversation_name :"Default_Conversation";
     convObj.conversation_time = new Date();
     convObj.createdTimeStamp = new Date();
@@ -78,14 +83,14 @@ export async function insertConversationDataCall(login_id:number,conversation_na
    
 }
 
-export async function updateConversationDataCall(id:number,conversation_id:number,login_id:number,conversation_name:string,conversation_type_id:number): Promise<any> {
+export async function updateConversationDataCall(id:string,conversation_id:string,login_id:string,conversation_name:string,conversation_type_id:string): Promise<any> {
     // initialize
     await connectionFactory.initialize();
     console.log("conn estbl");
     const convObj = new Conversation();
-    convObj.id = id;
-    convObj.conversation_id = conversation_id;
-    convObj.login_id = login_id;
+    convObj.id = Number(id);
+    convObj.conversation_id = Number(conversation_id);
+    convObj.login_id = Number(login_id);
     convObj.conversation_name = conversation_name!=null ? conversation_name :"Default_Conversation";
     convObj.conversation_time = new Date();
     convObj.createdTimeStamp = new Date();
@@ -106,13 +111,13 @@ export async function updateConversationDataCall(id:number,conversation_id:numbe
 }
 
 
-export async function deleteConversationDataCall(conversation_id:number): Promise<any> {
+export async function deleteConversationDataCall(conversation_id:string): Promise<any> {
   // initialize
   await connectionFactory.initialize();
   console.log("conn estbl");
   try{
   let conversationObj = await connectionFactory.getRepository(Conversation).findOneBy({
-    conversation_id: conversation_id,
+    conversation_id: Number(conversation_id),
 });
     await connectionFactory.getRepository(Conversation).remove(conversationObj);
   console.log("conversation Removed");
@@ -128,14 +133,14 @@ export async function deleteConversationDataCall(conversation_id:number): Promis
   }
 }
 
-export async function fetchConversationSpecificDataCall(conversation_id:number): Promise<any> {
+export async function fetchConversationSpecificDataCall(conversation_id:string): Promise<any> {
 
      // initialize
   await connectionFactory.initialize();
   console.log("conn estbl");
   try{
   let conversationObj = await connectionFactory.getRepository(Conversation).findOneBy({
-    conversation_id: conversation_id,
+    conversation_id: Number(conversation_id),
 });
 
   console.log("conversation Object"+conversationObj);

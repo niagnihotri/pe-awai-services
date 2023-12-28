@@ -29,6 +29,12 @@ export const connectionFactory = new DataSource({
     database: dataCode.DB_DATABASE,
     entities: [User,Conversation],
     synchronize: false,
+    ssl: true,
+  extra: {
+    ssl: {
+      "rejectUnauthorized": false
+    }
+  }
 });
 /*
 connectionFactory

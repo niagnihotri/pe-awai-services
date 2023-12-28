@@ -39,8 +39,8 @@ export async function fetchUesrDataCall(): Promise<any>{
 
 
 export async function insertUserDataCall(username:string,email:string): Promise<any> {
-    // initialize
-    await connectionFactory.initialize();
+        // initialize
+   await connectionFactory.initialize();
     console.log("conn estbl");
     const userObj = new User();
     userObj.login_id = getRandomUUID();
@@ -65,12 +65,12 @@ export async function insertUserDataCall(username:string,email:string): Promise<
    
 }
 
-export async function updateUserDataCall(id:number,username:string,email:string): Promise<any> {
+export async function updateUserDataCall(id:string,username:string,email:string): Promise<any> {
     // initialize
     await connectionFactory.initialize();
     console.log("conn estbl");
     const userObj = new User();
-    userObj.id=id
+    userObj.id=Number(id);
     userObj.login_id = getRandomUUID();
     userObj.username = username;
     userObj.email = email;
@@ -93,13 +93,13 @@ export async function updateUserDataCall(id:number,username:string,email:string)
 }
 
 
-export async function deleteUserDataCall(login_id:number): Promise<any> {
+export async function deleteUserDataCall(login_id:string): Promise<any> {
   // initialize
   await connectionFactory.initialize();
   console.log("conn estbl");
   try{
   let userObj = await connectionFactory.getRepository(User).findOneBy({
-    login_id: login_id,
+    login_id: Number(login_id),
 });
     await connectionFactory.getRepository(User).remove(userObj);
   console.log("User Removed");
@@ -115,14 +115,14 @@ export async function deleteUserDataCall(login_id:number): Promise<any> {
   }
 }
 
-export async function fetchUserSpecificDataCall(login_id:number): Promise<any> {
+export async function fetchUserSpecificDataCall(login_id:string): Promise<any> {
 
      // initialize
   await connectionFactory.initialize();
   console.log("conn estbl");
   try{
   let userObj = await connectionFactory.getRepository(User).findOneBy({
-    login_id: login_id,
+    login_id: Number(login_id),
 });
   console.log("User Object"+userObj);
   return userObj;
