@@ -55,7 +55,7 @@ export async function insertUserDataCall(username:string,email:string): Promise<
         return true
     }
     catch(errors){
-        console.log("issue while saving data");
+        console.log("Issue while saving data=="+errors);
         return false;
     }
     finally{

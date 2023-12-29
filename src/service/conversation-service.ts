@@ -8,39 +8,8 @@ const mysql = require('mysql');
 
 export async function fetchConversationDataCall(): Promise<any> {
     console.log("inside function fetchConversationDataCall")
-    var connection = mysql.createConnection({
-        host: 'pe-awai.cluster-cng8u5rib7j2.us-east-1.rds.amazonaws.com',
-        port: 3306,
-        user: "admin",
-        password: "Admin123",
-        database: "awai",
-        ssl: true //this does the trick
-      });
-
-      connection.connect();
-
-    
-    let query="SELECT Id, conversation_id, login_id, conversation_name, conversation_type_id, conversation_time, createdTimeStamp, updatedTimestamp FROM awai.Conversation;"
-    console.log("before query==="+query);
-    connection.query(query, function (error, results, fields) {
-        if (error) {
-            console.log("error Message==="+error);
-            connection.destroy();
-            throw error;
-        } else {
-            // connected!
-            console.log("Connected==="+results);
-            return results;
-           // callback(error, results);
-            connection.end(function (err) { //callback(err, results); 
-            });
-        }
-    });
-
-
-    
-    // initialize
-  /*  await connectionFactory.initialize();
+   // initialize
+    await connectionFactory.initialize();
     console.log("conn estbl");
     try{
     let allConversations = await connectionFactory.getRepository(Conversation).find();
@@ -54,7 +23,7 @@ export async function fetchConversationDataCall(): Promise<any> {
     finally{
          // destroy the connection
     await connectionFactory.destroy()
-    } */
+    } 
 }
 
 export async function insertConversationDataCall(login_id:string,conversation_name:string,conversation_type_id:string): Promise<any> {
@@ -65,6 +34,7 @@ export async function insertConversationDataCall(login_id:string,conversation_na
     convObj.conversation_id= getRandomUUID();
     convObj.login_id = Number(login_id);
     convObj.conversation_name = conversation_name!=null ? conversation_name :"Default_Conversation";
+    convObj.conversation_type_id=Number(conversation_type_id);
     convObj.conversation_time = new Date();
     convObj.createdTimeStamp = new Date();
     try{
@@ -92,6 +62,7 @@ export async function updateConversationDataCall(id:string,conversation_id:strin
     convObj.conversation_id = Number(conversation_id);
     convObj.login_id = Number(login_id);
     convObj.conversation_name = conversation_name!=null ? conversation_name :"Default_Conversation";
+    convObj.conversation_type_id=Number(conversation_type_id);
     convObj.conversation_time = new Date();
     convObj.createdTimeStamp = new Date();
     try{

@@ -19,7 +19,7 @@ export async function getUserSpecificData(event: APIGatewayProxyEvent): Promise<
   export async function postUserData( event: APIGatewayProxyEvent): Promise<any> {
     const result = await insertUserDataCall(event.pathParameters.username, event.pathParameters.email);
       if(result){
-        response.ok(result);
+        response.ok("Saved successfully");
       }
       else{
         return response.error(400,"Error while inserting record");

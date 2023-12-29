@@ -1,4 +1,4 @@
 export function getRandomUUID() {
-    var timestamp = new Date().toJSON().slice(0,19).replace(/-/g,'').replace("T","").replace(":","").replace(":","");  
+    var timestamp = new Date().valueOf();  
     return Number(timestamp);
     }
