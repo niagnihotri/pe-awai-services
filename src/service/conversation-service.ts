@@ -6,13 +6,13 @@ import {getRandomUUID} from "../utils/UUIDGeneration"
 const mysql = require('mysql');
 
 
-export async function fetchConversationDataCall(): Promise<any> {
+export async function fetchConversationDataCall(login_id:string): Promise<any> {
     console.log("inside function fetchConversationDataCall")
    // initialize
     await connectionFactory.initialize();
-    console.log("conn estbl");
+    console.log("conn established");
     try{
-    let allConversations = await connectionFactory.getRepository(Conversation).find();
+    let allConversations = await connectionFactory.getRepository(Conversation).findOneBy({login_id: Number(login_id)});
     console.log("allConversations==" + JSON.stringify(allConversations));
     return allConversations
     }
@@ -29,7 +29,7 @@ export async function fetchConversationDataCall(): Promise<any> {
 export async function insertConversationDataCall(login_id:string,conversation_name:string,conversation_type_id:string): Promise<any> {
     // initialize
     await connectionFactory.initialize();
-    console.log("conn estbl");
+    console.log("conn established");
     const convObj = new Conversation();
     convObj.conversation_id= getRandomUUID();
     convObj.login_id = Number(login_id);
@@ -56,15 +56,16 @@ export async function insertConversationDataCall(login_id:string,conversation_na
 export async function updateConversationDataCall(id:string,conversation_id:string,login_id:string,conversation_name:string,conversation_type_id:string): Promise<any> {
     // initialize
     await connectionFactory.initialize();
-    console.log("conn estbl");
+    console.log("conn established");
     const convObj = new Conversation();
     convObj.id = Number(id);
     convObj.conversation_id = Number(conversation_id);
     convObj.login_id = Number(login_id);
-    convObj.conversation_name = conversation_name!=null ? conversation_name :"Default_Conversation";
+    convObj.conversation_name = conversation_name;
     convObj.conversation_type_id=Number(conversation_type_id);
-    convObj.conversation_time = new Date();
-    convObj.createdTimeStamp = new Date();
+    convObj.updatedTimestamp = new Date();
+    //convObj.createdTimeStamp = new Date();
+    console.log("Boj before update=="+JSON.stringify(convObj));
     try{
     await connectionFactory.getRepository(Conversation).save(convObj)
     console.log("Updated successfully");
@@ -85,7 +86,7 @@ export async function updateConversationDataCall(id:string,conversation_id:strin
 export async function deleteConversationDataCall(conversation_id:string): Promise<any> {
   // initialize
   await connectionFactory.initialize();
-  console.log("conn estbl");
+  console.log("conn established");
   try{
   let conversationObj = await connectionFactory.getRepository(Conversation).findOneBy({
     conversation_id: Number(conversation_id),
@@ -104,14 +105,14 @@ export async function deleteConversationDataCall(conversation_id:string): Promis
   }
 }
 
-export async function fetchConversationSpecificDataCall(conversation_id:string): Promise<any> {
+export async function fetchConversationSpecificDataCall(id:string): Promise<any> {
 
      // initialize
   await connectionFactory.initialize();
-  console.log("conn estbl");
+  console.log("conn established");
   try{
   let conversationObj = await connectionFactory.getRepository(Conversation).findOneBy({
-    conversation_id: Number(conversation_id),
+    id: Number(id),
 });
 
   console.log("conversation Object"+conversationObj);

@@ -115,26 +115,22 @@ provider:
             - "*"
 
 functions:
-  fetchUesrData:
-    handler: src/handler/user-handler.getUesrData
-  getUserSpecificData:
-    handler: src/handler/user-handler.getUserSpecificData
-  postUserData:
-    handler: src/handler/user-handler.postUserData
-  updateUserData:
-    handler: src/handler/user-handler.updateUserData
-  deleteUserData:
-    handler: src/handler/user-handler.deleteUserData
-  getConversationData:
-     handler: src/handler/conversation-handler.getConversationData
-  getConversationSpecificData:
-    handler: src/handler/conversation-handler.getConversationSpecificData
-  postConversationData:
-    handler: src/handler/conversation-handler.postConversationData
-  updateConversationData:
-    handler: src/handler/conversation-handler.updateConversationData
-  deleteConversationData:
-    handler: src/handler/conversation-handler.deleteConversationData
+  getAllUesrs:
+    handler: src/handler/user-handler.findAllUesrs
+  findUserByLoginId:
+    handler: src/handler/user-handler.findUserByLoginId
+  findUserByEmail:
+    handler: src/handler/user-handler.findUserByEmail
+  userData:
+    handler: src/handler/user-handler.userData
+ 
+  findAllConversations:
+     handler: src/handler/conversation-handler.findAllConversations
+  findConversationById:
+    handler: src/handler/conversation-handler.findConversationById
+  conversationData:
+    handler: src/handler/conversation-handler.conversationData
+  
 
 
 
