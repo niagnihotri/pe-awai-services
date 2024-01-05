@@ -2,7 +2,7 @@ import { fetchConversationDataCall, fetchConversationSpecificDataCall, insertCon
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import response from "../utils/response";
 
-export async function findAllConversations(event: APIGatewayProxyEvent): Promise<any> {
+export async function findConversationsByLoginId(event: APIGatewayProxyEvent): Promise<any> {
 
   let login_id = null;
   if (event.body !== null && event.body !== undefined) {
@@ -10,7 +10,12 @@ export async function findAllConversations(event: APIGatewayProxyEvent): Promise
     if (body.login_id) {
       login_id = body.login_id;
       const result = await fetchConversationDataCall(login_id);
-      return response.ok(result);
+      if(result){
+        return response.ok(result);
+        }
+        else{
+          return response.ok("No data present");
+        }
     }
     else {
       return response.error(500, "No Id present in request");
@@ -22,13 +27,18 @@ export async function findAllConversations(event: APIGatewayProxyEvent): Promise
 }
 
 export async function findConversationById(event: APIGatewayProxyEvent): Promise<any> {
-  let id = null;
+  let conversation_id = null;
   if (event.body !== null && event.body !== undefined) {
     let body = JSON.parse(event.body)
-    if (body.id) {
-      id = body.id;
-      const result = await fetchConversationSpecificDataCall(id);
+    if (body.conversation_id) {
+      conversation_id = body.conversation_id;
+      const result = await fetchConversationSpecificDataCall(conversation_id);
+      if(result){
       return response.ok(result);
+      }
+      else{
+        return response.ok("No data present");
+      }
     }
     else {
       return response.error(500, "No Id present in request");
@@ -53,7 +63,7 @@ export async function conversationData(event: APIGatewayProxyEvent): Promise<any
         conversation_type_id = body.conversation_type_id;
         const result = await insertConversationDataCall(login_id, conversation_name, conversation_type_id);
         if (result) {
-         return response.ok(result);
+         return response.ok("Saved successfully");
         }
         else {
           return response.error(400, "Error while inserting record");
@@ -79,17 +89,17 @@ export async function conversationData(event: APIGatewayProxyEvent): Promise<any
       let body = JSON.parse(event.body)
       if (body.id) {
         id=body.id;
-        conversation_id= body.conversation_id;
+        conversation_id= body.conversation_id? body.conversation_id : null;
         login_id = body.login_id;
         conversation_name = body.conversation_name;
         conversation_type_id = body.conversation_type_id;
         const result = await updateConversationDataCall(id, conversation_id, login_id, conversation_name,
           conversation_type_id);
         if (result) {
-         return response.ok(result);
+         return response.ok("Updated Successfully");
         }
         else {
-          return response.error(400, "Error while inserting record");
+          return response.error(400, "Error while updating record");
         }
       }
       else {
@@ -108,7 +118,7 @@ export async function conversationData(event: APIGatewayProxyEvent): Promise<any
         conversation_id = body.conversation_id;
         const result = await deleteConversationDataCall(conversation_id);;
         if (result) {
-          return response.ok(result);
+          return response.ok("Deleted Successfully");
         }
         else {
           return response.error(400, "Error while deleting record");

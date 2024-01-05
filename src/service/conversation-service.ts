@@ -12,7 +12,7 @@ export async function fetchConversationDataCall(login_id:string): Promise<any> {
     await connectionFactory.initialize();
     console.log("conn established");
     try{
-    let allConversations = await connectionFactory.getRepository(Conversation).findOneBy({login_id: Number(login_id)});
+    let allConversations = await connectionFactory.getRepository(Conversation).findBy({login_id: Number(login_id)});
     console.log("allConversations==" + JSON.stringify(allConversations));
     return allConversations
     }
@@ -105,14 +105,14 @@ export async function deleteConversationDataCall(conversation_id:string): Promis
   }
 }
 
-export async function fetchConversationSpecificDataCall(id:string): Promise<any> {
+export async function fetchConversationSpecificDataCall(conversation_id:string): Promise<any> {
 
      // initialize
   await connectionFactory.initialize();
   console.log("conn established");
   try{
   let conversationObj = await connectionFactory.getRepository(Conversation).findOneBy({
-    id: Number(id),
+    conversation_id: Number(conversation_id),
 });
 
   console.log("conversation Object"+conversationObj);

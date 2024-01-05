@@ -125,7 +125,7 @@ functions:
     handler: src/handler/user-handler.userData
  
   findAllConversations:
-     handler: src/handler/conversation-handler.findAllConversations
+     handler: src/handler/conversation-handler.findConversationsByLoginId
   findConversationById:
     handler: src/handler/conversation-handler.findConversationById
   conversationData:

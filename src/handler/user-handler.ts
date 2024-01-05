@@ -35,6 +35,7 @@ export async function findUserByEmail(event: APIGatewayProxyEvent): Promise<any>
     if (body.email)
       email = body.email;
       const result = await fetchUserByEmailCall(email);
+      
       return response.ok(result);
   }
   else {
@@ -97,22 +98,22 @@ else if(event.httpMethod==="PUT"){
   }
 }
 else if(event.httpMethod==="DELETE"){
-  let id=null;
+  let login_id=null;
   if (event.body !== null && event.body !== undefined) {
     let body = JSON.parse(event.body)
-    if (body.id){
-      id=body.id
+    if (body.login_id){
+      login_id=body.login_id
     }
     else{
       return response.error(400, "No Id value in request");
     }
-    const result = await deleteUserDataCall(event.pathParameters.login_id);
+    const result = await deleteUserDataCall(login_id);
 
       if (result) {
-        return response.ok("Updated Successfully");
+        return response.ok("Deleted Successfully");
       }
       else {
-        return response.error(400, "Error while inserting record");
+        return response.error(400, "Error while delete record");
       }
   }
     else {

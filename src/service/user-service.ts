@@ -117,7 +117,7 @@ export async function getUserByLoginIdCall(login_id: string): Promise<any> {
             return userObj;
         }
         else {
-            return "No Data found";
+            return false;
         }
     }
     catch (errors) {
