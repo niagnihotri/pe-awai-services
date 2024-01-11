@@ -3,6 +3,7 @@ import { DataSource } from "typeorm"
 import { DATA_SOURCES } from './vars';
 import {User } from "../entities/user";
 import {Conversation } from "../entities/conversation";
+import {Chatlet} from "../entities/chatlet"
 
 const dataCode = DATA_SOURCES.mySqlDataSource;
 /*
@@ -27,7 +28,7 @@ export const connectionFactory = new DataSource({
     username: dataCode.DB_USER,
     password: dataCode.DB_PASSWORD,
     database: dataCode.DB_DATABASE,
-    entities: [User,Conversation],
+    entities: [User,Conversation,Chatlet],
     synchronize: false,
     ssl: true,
   extra: {

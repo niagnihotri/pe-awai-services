@@ -34,9 +34,9 @@ export async function findUserByEmail(event: APIGatewayProxyEvent): Promise<any>
     let body = JSON.parse(event.body)
     if (body.email)
       email = body.email;
-      const result = await fetchUserByEmailCall(email);
-      
-      return response.ok(result);
+    const result = await fetchUserByEmailCall(email);
+
+    return response.ok(result);
   }
   else {
     return response.error(500, "Something wromg with request");
@@ -46,81 +46,102 @@ export async function findUserByEmail(event: APIGatewayProxyEvent): Promise<any>
 
 
 export async function userData(event: APIGatewayProxyEvent): Promise<any> {
-if(event.httpMethod==="POST"){
-  let username =null;
-  let email= null;
-  if (event.body !== null && event.body !== undefined) {
-    let body = JSON.parse(event.body)
-    if (body.username && body.email){
-    username = body.username;
-    email = body.email
-    }
-    else{
-      return response.error(400, "No required informain in request");
-    }
-      const result = await insertUserDataCall(username, email);
-      if (result) {
-        return response.ok("Saved successfully");
+  switch (event.httpMethod) {
+    case ("GET"):
+      {
+        let email = null;
+        console.log("inside GET====" + event.pathParameters.email)
+        if (event.pathParameters !== null && event.pathParameters !== undefined) {
+          if (event.pathParameters.email)
+            email = event.pathParameters.email;
+          const result = await fetchUserByEmailCall(email);
+
+          return response.ok(result);
+        }
+        else {
+          return response.error(500, "Something wromg with request");
+        }
+      }
+      break;
+    case ("POST"): {
+      let username = null;
+      let email = null;
+      if (event.body !== null && event.body !== undefined) {
+        let body = JSON.parse(event.body)
+        if (body.username && body.email) {
+          username = body.username;
+          email = body.email
+        }
+        else {
+          return response.error(400, "No required informain in request");
+        }
+        const result = await insertUserDataCall(username, email);
+        if (result) {
+          return response.ok(result);
+        }
+        else {
+          return response.error(400, "Error while inserting record");
+        }
       }
       else {
-        return response.error(400, "Error while inserting record");
+        return response.error(500, "Something wromg with request");
       }
-  }
-    else {
-    return response.error(500, "Something wromg with request");
-  }
-}
-else if(event.httpMethod==="PUT"){
-  let id=null;
-  let username =null;
-  let email= null;
-  if (event.body !== null && event.body !== undefined) {
-    let body = JSON.parse(event.body)
-    if (body.id){
-    id=body.id;
-    username = body.username;
-    email = body.email
     }
-    else{
-      return response.error(400, "No required informain in request");
-    }
-    const result = await updateUserDataCall(id, username, email);
+    break;
+    case ("PUT"): {
+      let id = null;
+      let username = null;
+      let email = null;
+      if (event.body !== null && event.body !== undefined) {
+        let body = JSON.parse(event.body)
+        if (body.id) {
+          id = body.id;
+          username = body.username;
+          email = body.email
+        }
+        else {
+          return response.error(400, "No required informain in request");
+        }
+        const result = await updateUserDataCall(id, username, email);
 
-      if (result) {
-        return response.ok("Updated Successfully");
+        if (result) {
+          return response.ok("Updated Successfully");
+        }
+        else {
+          return response.error(400, "Error while inserting record");
+        }
       }
       else {
-        return response.error(400, "Error while inserting record");
+        return response.error(500, "Something wromg with request");
       }
-  }
-    else {
-    return response.error(500, "Something wromg with request");
-  }
-}
-else if(event.httpMethod==="DELETE"){
-  let login_id=null;
-  if (event.body !== null && event.body !== undefined) {
-    let body = JSON.parse(event.body)
-    if (body.login_id){
-      login_id=body.login_id
     }
-    else{
-      return response.error(400, "No Id value in request");
-    }
-    const result = await deleteUserDataCall(login_id);
+    break;
+    case ("DELETE"): {
+      let login_id = null;
+      if (event.body !== null && event.body !== undefined) {
+        let body = JSON.parse(event.body)
+        if (body.login_id) {
+          login_id = body.login_id
+        }
+        else {
+          return response.error(400, "No Id value in request");
+        }
+        const result = await deleteUserDataCall(login_id);
 
-      if (result) {
-        return response.ok("Deleted Successfully");
+        if (result) {
+          return response.ok("Deleted Successfully");
+        }
+        else {
+          return response.error(400, "Error while delete record");
+        }
       }
       else {
-        return response.error(400, "Error while delete record");
+        return response.error(500, "Something wromg with request");
       }
-  }
-    else {
-    return response.error(500, "Something wromg with request");
-  }
 
-}
+    }
+    break;
+  }
 
 }
 

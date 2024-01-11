@@ -1,9 +1,7 @@
 import {connectionFactory} from "../utils/database"
 import {Conversation} from "../entities/conversation"
-import { Timestamp } from "typeorm";
 import {getRandomUUID} from "../utils/UUIDGeneration"
 
-const mysql = require('mysql');
 
 
 export async function fetchConversationDataCall(login_id:string): Promise<any> {

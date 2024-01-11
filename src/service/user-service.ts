@@ -26,7 +26,7 @@ export async function getAllUesrsCall(): Promise<any> {
 
 
 export async function insertUserDataCall(username: string, email: string): Promise<any> {
-    console.log("Data username=="+username+"  email=="+email);
+    console.log("Data username==" + username + "  email==" + email);
     // initialize
     await connectionFactory.initialize();
     console.log("conn established");
@@ -36,11 +36,22 @@ export async function insertUserDataCall(username: string, email: string): Promi
     userObj.email = email;
     userObj.loginTimestamp = new Date();
     userObj.createdTimeStamp = new Date();
-    console.log("Object to save=="+JSON.stringify(userObj));
+    console.log("Object to save==" + JSON.stringify(userObj));
+
     try {
-        await connectionFactory.getRepository(User).save(userObj)
-        console.log("Saved successfully");
-        return true
+        let userObjResult = await connectionFactory.getRepository(User).findOneBy({
+            email: email,
+        });
+        console.log("User Object" + userObjResult);
+        if (userObjResult) {
+            return "User already exist in Database";
+        }
+        else {
+
+            await connectionFactory.getRepository(User).save(userObj)
+            console.log("Saved successfully");
+            return "Saved successfully";
+        }
     }
     catch (errors) {
         console.log("Issue while saving data==" + errors);
@@ -135,7 +146,7 @@ export async function fetchUserByEmailCall(email: string): Promise<any> {
 
     // initialize
     await connectionFactory.initialize();
-    console.log("conn established");
+    console.log("conn established =="+email);
     try {
         let userObj = await connectionFactory.getRepository(User).findOneBy({
             email: email,

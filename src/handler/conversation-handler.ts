@@ -10,12 +10,12 @@ export async function findConversationsByLoginId(event: APIGatewayProxyEvent): P
     if (body.login_id) {
       login_id = body.login_id;
       const result = await fetchConversationDataCall(login_id);
-      if(result){
+      if (result) {
         return response.ok(result);
-        }
-        else{
-          return response.ok("No data present");
-        }
+      }
+      else {
+        return response.ok("No data present");
+      }
     }
     else {
       return response.error(500, "No Id present in request");
@@ -33,10 +33,10 @@ export async function findConversationById(event: APIGatewayProxyEvent): Promise
     if (body.conversation_id) {
       conversation_id = body.conversation_id;
       const result = await fetchConversationSpecificDataCall(conversation_id);
-      if(result){
-      return response.ok(result);
+      if (result) {
+        return response.ok(result);
       }
-      else{
+      else {
         return response.ok("No data present");
       }
     }
@@ -51,85 +51,112 @@ export async function findConversationById(event: APIGatewayProxyEvent): Promise
 
 
 export async function conversationData(event: APIGatewayProxyEvent): Promise<any> {
-  if (event.httpMethod === "POST") {
-    let login_id = null;
-    let conversation_name = null;
-    let conversation_type_id = null;
-    if (event.body !== null && event.body !== undefined) {
-      let body = JSON.parse(event.body)
-      if (body.login_id && body.conversation_name && body.conversation_type_id) {
-        login_id = body.login_id;
-        conversation_name = body.conversation_name;
-        conversation_type_id = body.conversation_type_id;
-        const result = await insertConversationDataCall(login_id, conversation_name, conversation_type_id);
-        if (result) {
-         return response.ok("Saved successfully");
+  switch (event.httpMethod) {
+    case ("GET"): {
+      let login_id = null;
+      if (event.pathParameters !== null && event.pathParameters !== undefined) {
+        if (event.pathParameters.login_id) {
+          login_id = event.pathParameters.login_id;
+          const result = await fetchConversationDataCall(login_id);
+          if (result) {
+            return response.ok(result);
+          }
+          else {
+            return response.ok("No data present");
+          }
         }
         else {
-          return response.error(400, "Error while inserting record");
+          return response.error(500, "No Id present in request");
         }
       }
       else {
-        return response.error(500, "Request is mismatched");
+        return response.error(500, "Sometning wromg with request");
       }
-    }
-    else {
-      return response.error(500, "Sometning wromg with request");
-    }
 
-  }
-  else if (event.httpMethod === "PUT") {
-    console.log("Inside update")
-    let id = null;
-    let conversation_id = null;
-    let login_id = null;
-    let conversation_name = null;
-    let conversation_type_id = null;
-    if (event.body !== null && event.body !== undefined) {
-      let body = JSON.parse(event.body)
-      if (body.id) {
-        id=body.id;
-        conversation_id= body.conversation_id? body.conversation_id : null;
-        login_id = body.login_id;
-        conversation_name = body.conversation_name;
-        conversation_type_id = body.conversation_type_id;
-        const result = await updateConversationDataCall(id, conversation_id, login_id, conversation_name,
-          conversation_type_id);
-        if (result) {
-         return response.ok("Updated Successfully");
+    }
+      break;
+    case ("POST"): {
+      let login_id = null;
+      let conversation_name = null;
+      let conversation_type_id = null;
+      if (event.body !== null && event.body !== undefined) {
+        let body = JSON.parse(event.body)
+        if (body.login_id && body.conversation_name && body.conversation_type_id) {
+          login_id = body.login_id;
+          conversation_name = body.conversation_name;
+          conversation_type_id = body.conversation_type_id;
+          const result = await insertConversationDataCall(login_id, conversation_name, conversation_type_id);
+          if (result) {
+            return response.ok("Saved successfully");
+          }
+          else {
+            return response.error(400, "Error while inserting record");
+          }
         }
         else {
-          return response.error(400, "Error while updating record");
+          return response.error(500, "Request is mismatched");
         }
       }
       else {
-        return response.error(500, "Request is mismatched, Id must be passed to update");
+        return response.error(500, "Sometning wromg with request");
       }
+
     }
-    else {
-      return response.error(500, "Sometning wromg with request");
-    }
-  }
-  else if (event.httpMethod === "DELETE") {
-    let conversation_id = null;
-    if (event.body !== null && event.body !== undefined) {
-      let body = JSON.parse(event.body)
-      if (body.conversation_id) {
-        conversation_id = body.conversation_id;
-        const result = await deleteConversationDataCall(conversation_id);;
-        if (result) {
-          return response.ok("Deleted Successfully");
+      break;
+    case ("PUT"): {
+      console.log("Inside update")
+      let id = null;
+      let conversation_id = null;
+      let login_id = null;
+      let conversation_name = null;
+      let conversation_type_id = null;
+      if (event.body !== null && event.body !== undefined) {
+        let body = JSON.parse(event.body)
+        if (body.id) {
+          id = body.id;
+          conversation_id = body.conversation_id ? body.conversation_id : null;
+          login_id = body.login_id;
+          conversation_name = body.conversation_name;
+          conversation_type_id = body.conversation_type_id;
+          const result = await updateConversationDataCall(id, conversation_id, login_id, conversation_name,
+            conversation_type_id);
+          if (result) {
+            return response.ok("Updated Successfully");
+          }
+          else {
+            return response.error(400, "Error while updating record");
+          }
         }
         else {
-          return response.error(400, "Error while deleting record");
+          return response.error(500, "Request is mismatched, Id must be passed to update");
         }
       }
       else {
-        return response.error(500, "No conversation_id present in request");
+        return response.error(500, "Sometning wromg with request");
       }
     }
-    else {
-      return response.error(500, "Sometning wromg with request");
+      break;
+    case ("DELETE"): {
+      let conversation_id = null;
+      if (event.body !== null && event.body !== undefined) {
+        let body = JSON.parse(event.body)
+        if (body.conversation_id) {
+          conversation_id = body.conversation_id;
+          const result = await deleteConversationDataCall(conversation_id);;
+          if (result) {
+            return response.ok("Deleted Successfully");
+          }
+          else {
+            return response.error(400, "Error while deleting record");
+          }
+        }
+        else {
+          return response.error(500, "No conversation_id present in request");
+        }
+      }
+      else {
+        return response.error(500, "Sometning wromg with request");
+      }
     }
   }
 }
