@@ -188,6 +188,26 @@ functions:
           method: GET
           cors: true
 
+  conversationData:
+     handler: src/handler/chatlet-handler.chatletData 
+      events:
+      - http:
+          path: api/v1/pe-awai-services/handler
+          method: POST
+          cors: true
+      - http:
+          path: api/v1/pe-awai-services/handler
+          method: PUT
+          cors: true  
+      - http:
+          path: api/v1/pe-awai-services/handler
+          method: DELETE
+          cors: true
+      - http:
+          path: api/v1/pe-awai-services/handler/{conversation_id}
+          method: GET
+          cors: true
+
 
 
 resources:
